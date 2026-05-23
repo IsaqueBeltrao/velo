@@ -30,6 +30,5 @@ dist-ssr
 /playwright/.cache/
 /playwright/.auth/
 
-# Credenciais do Supabase
-docs/db-password.txt
-docs/supabse-cli.txt
+# Credenciais e notas locais (não versionar)
+docs/
