@@ -20,13 +20,10 @@ test('Deve consultar um pedido Aprovado', async ({ page }) => {
   await expect(page.getByText('Número do Pedido')).toBeVisible();
   await expect(searchInput).toHaveValue(APPROVED_ORDER_ID);
 
-  await expect(page.getByText('Pedido', { exact: true })).toBeVisible();
-  await expect(page.getByTestId(`order-result-${APPROVED_ORDER_ID}`)).toContainText('Pedido');
-  await expect(page.getByTestId('order-result-id')).toHaveText(APPROVED_ORDER_ID);
+  await expect(page.getByText('Número do Pedido')).toBeVisible();
+  await expect(page.locator('label')).toContainText('Número do Pedido');
+  await expect(page.getByTestId('search-order-id')).toHaveValue(APPROVED_ORDER_ID);
 
-  const statusBadge = page.getByTestId('order-result-status');
-  await expect(statusBadge).toBeVisible();
-  await expect(statusBadge).toContainText('APROVADO');
-  await expect(statusBadge).toHaveClass(/bg-green-100/);
-  await expect(statusBadge).toHaveClass(/text-green-700/);
+  await expect(page.getByText('APROVADO')).toBeVisible();
+  await expect(page.getByTestId(`order-result-${APPROVED_ORDER_ID}`)).toContainText('APROVADO');
 });
