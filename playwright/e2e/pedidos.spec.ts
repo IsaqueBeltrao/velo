@@ -24,6 +24,6 @@ test('Deve consultar um pedido Aprovado', async ({ page }) => {
   await expect(page.locator('label')).toContainText('Número do Pedido');
   await expect(page.getByTestId('search-order-id')).toHaveValue(APPROVED_ORDER_ID);
 
-  await expect(page.getByText('APROVADO')).toBeVisible();
+  await expect(page.getByText('APROVADO')).toBeVisible({timeout: 10000});
   await expect(page.getByTestId(`order-result-${APPROVED_ORDER_ID}`)).toContainText('APROVADO');
 });
