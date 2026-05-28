@@ -1,8 +1,10 @@
 import { test, expect } from '@playwright/test';
+import{generateOrderCode} from '../suport/helpers';
 
 const URL_BASE = 'http://localhost:5173/lookup';
+
 const ORDER_ID = 'VLO-7KQ2P8';
-const INVALID_ORDER_ID = 'VLO-INVALID';
+const INVALID_ORDER_ID = generateOrderCode();
 
 test('Deve consultar um pedido Aprovado', async ({ page }) => {
   // Arrange — preparar estado e dados do teste
