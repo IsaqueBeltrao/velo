@@ -25,11 +25,35 @@ test.describe("Consulta de Pedidos", () => {
   test('Deve consultar um pedido Aprovado', async ({ page }) => {
     // Act — executar a ação sob teste
     await searchOrder(ORDER_ID);
-
     // Assert — verificar o resultado
-    const orderResult = page.getByTestId(`order-result-${ORDER_ID}`);
-    await expect(orderResult).toBeVisible({ timeout: 10000 });
-    await expect(orderResult).toContainText('APROVADO');
+    await expect(page.getByTestId(`order-result-${ORDER_ID}`)).toMatchAriaSnapshot(`
+    - img
+    - paragraph: Pedido
+    - paragraph: ${ORDER_ID}
+    - img
+    - text: APROVADO
+    - img "Velô Sprint"
+    - paragraph: Modelo
+    - paragraph: Velô Sprint
+    - paragraph: Cor
+    - paragraph: Lunar White
+    - paragraph: Interior
+    - paragraph: cream
+    - paragraph: Rodas
+    - paragraph: aero Wheels
+    - heading "Dados do Cliente" [level=4]
+    - paragraph: Nome
+    - paragraph: Isaque Teste Teste QA
+    - paragraph: Email
+    - paragraph: isaqueteste@gmaiil.com
+    - paragraph: Loja de Retirada
+    - paragraph
+    - paragraph: Data do Pedido
+    - paragraph: /\\d+\\/\\d+\\/\\d+/
+    - heading "Pagamento" [level=4]
+    - paragraph: À Vista
+    - paragraph: /R\\$ \\d+\\.\\d+,\\d+/
+    `);
   });
 
   test('Deve exibir mensagem quando o pedido não for encontrado', async ({ page }) => {
