@@ -3,8 +3,28 @@ import { generateOrderCode } from '../suport/helpers';
 
 // Arrange — preparar estado e dados do teste
 const URL_BASE = 'http://localhost:5173/lookup';
-const ORDER_ID = 'VLO-7KQ2P8';
 
+const order={
+  approved: {
+    id: 'VLO-7KQ2P8',
+    status: 'APROVADO',
+    color: 'Lunar White',
+    wheelType: 'aero Wheels',
+    name: 'Isaque Teste Teste QA',
+    email: 'isaqueteste@gmaiil.com',
+    payment: 'À Vista',
+
+  },
+  rejected: {
+    id: 'VLO-13PK6C',
+    status: 'REPROVADO',
+    color: 'Midnight Black',
+    wheelType: 'sport Wheels',
+    name: 'Peter Parker',
+    email: 'spiderman@gmail.com',
+    payment: 'À Vista',
+  }
+}
 let searchInput: Locator;
 let searchButton: Locator;
 
@@ -24,34 +44,68 @@ test.describe("Consulta de Pedidos", () => {
 
   test('Deve consultar um pedido Aprovado', async ({ page }) => {
     // Act — executar a ação sob teste
-    await searchOrder(ORDER_ID);
+    await searchOrder(order.approved.id);
     // Assert — verificar o resultado
-    await expect(page.getByTestId(`order-result-${ORDER_ID}`)).toMatchAriaSnapshot(`
+    await expect(page.getByTestId(`order-result-${order.approved.id}`)).toMatchAriaSnapshot(`
     - img
     - paragraph: Pedido
-    - paragraph: ${ORDER_ID}
+    - paragraph: ${order.approved.id}
     - img
     - text: APROVADO
     - img "Velô Sprint"
     - paragraph: Modelo
     - paragraph: Velô Sprint
     - paragraph: Cor
-    - paragraph: Lunar White
+    - paragraph: ${order.approved.color}
     - paragraph: Interior
     - paragraph: cream
     - paragraph: Rodas
-    - paragraph: aero Wheels
+    - paragraph: ${order.approved.wheelType}
     - heading "Dados do Cliente" [level=4]
     - paragraph: Nome
-    - paragraph: Isaque Teste Teste QA
+    - paragraph: ${order.approved.name}
     - paragraph: Email
-    - paragraph: isaqueteste@gmaiil.com
+    - paragraph: ${order.approved.email}
     - paragraph: Loja de Retirada
     - paragraph
     - paragraph: Data do Pedido
     - paragraph: /\\d+\\/\\d+\\/\\d+/
     - heading "Pagamento" [level=4]
-    - paragraph: À Vista
+    - paragraph: ${order.approved.payment}
+    - paragraph: /R\\$ \\d+\\.\\d+,\\d+/
+    `);
+  });
+
+  test('Deve consultar um pedido Reprovado', async ({ page }) => {
+    // Act — executar a ação sob teste
+    await searchOrder(order.rejected.id);
+    // Assert — verificar o resultado
+    await expect(page.getByTestId(`order-result-${order.rejected.id}`)).toMatchAriaSnapshot(`
+    - img
+    - paragraph: Pedido
+    - paragraph: ${order.rejected.id}
+    - img
+    - text: REPROVADO
+    - img "Velô Sprint"
+    - paragraph: Modelo
+    - paragraph: Velô Sprint
+    - paragraph: Cor
+    - paragraph: ${order.rejected.color}
+    - paragraph: Interior
+    - paragraph: cream
+    - paragraph: Rodas
+    - paragraph: ${order.rejected.wheelType}
+    - heading "Dados do Cliente" [level=4]
+    - paragraph: Nome
+    - paragraph: ${order.rejected.name}
+    - paragraph: Email
+    - paragraph: ${order.rejected.email}
+    - paragraph: Loja de Retirada
+    - paragraph
+    - paragraph: Data do Pedido
+    - paragraph: /\\d+\\/\\d+\\/\\d+/
+    - heading "Pagamento" [level=4]
+    - paragraph: ${order.rejected.payment}
     - paragraph: /R\\$ \\d+\\.\\d+,\\d+/
     `);
   });
