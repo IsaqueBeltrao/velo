@@ -23,7 +23,16 @@ const order={
     name: 'Peter Parker',
     email: 'spiderman@gmail.com',
     payment: 'À Vista',
-  }
+  },
+  analysis: {
+    id: 'VLO-RGANAT',
+    status: 'EM_ANALISE',
+    color: 'Lunar White',
+    wheelType: 'sport Wheels',
+    name: 'Bruce Batman',
+    email: 'morcegao@gmail.com',
+    payment: 'À Vista',
+  },
 }
 let searchInput: Locator;
 let searchButton: Locator;
@@ -120,5 +129,39 @@ test.describe("Consulta de Pedidos", () => {
       - heading "Pedido não encontrado" [level=3]
       - paragraph: Verifique o número do pedido e tente novamente
       `);
+  });
+
+  test('Deve consultar um pedido em análise', async ({ page }) => {
+    // Act — executar a ação sob teste
+    await searchOrder(order.analysis.id);
+    // Assert — verificar o resultado
+    await expect(page.getByTestId(`order-result-${order.analysis.id}`)).toMatchAriaSnapshot(`
+    - img
+    - paragraph: Pedido
+    - paragraph: ${order.analysis.id}
+    - img
+    - text: EM_ANALISE
+    - img "Velô Sprint"
+    - paragraph: Modelo
+    - paragraph: Velô Sprint
+    - paragraph: Cor
+    - paragraph: ${order.analysis.color}
+    - paragraph: Interior
+    - paragraph: cream
+    - paragraph: Rodas
+    - paragraph: ${order.analysis.wheelType}
+    - heading "Dados do Cliente" [level=4]
+    - paragraph: Nome
+    - paragraph: ${order.analysis.name}
+    - paragraph: Email
+    - paragraph: ${order.analysis.email}
+    - paragraph: Loja de Retirada
+    - paragraph
+    - paragraph: Data do Pedido
+    - paragraph: /\\d+\\/\\d+\\/\\d+/
+    - heading "Pagamento" [level=4]
+    - paragraph: ${order.analysis.payment}
+    - paragraph: /R\\$ \\d+\\.\\d+,\\d+/
+    `);
   });
 })
