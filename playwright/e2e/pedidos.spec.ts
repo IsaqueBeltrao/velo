@@ -4,7 +4,7 @@ import { generateOrderCode } from '../suport/helpers';
 // Arrange — preparar estado e dados do teste
 const URL_BASE = 'http://localhost:5173/lookup';
 
-const order={
+const order = {
   approved: {
     id: 'VLO-7KQ2P8',
     status: 'APROVADO',
