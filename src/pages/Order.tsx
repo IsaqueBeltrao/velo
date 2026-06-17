@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import InputMask from 'react-input-mask';
+import InputMaskOriginal from 'react-input-mask'; // Alterado aqui
 import { ArrowLeft, Loader2 } from 'lucide-react';
 import { z } from 'zod';
 import { cn } from '@/lib/utils';
+const InputMask = InputMaskOriginal as any;
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';

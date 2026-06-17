@@ -54,13 +54,15 @@ test.describe("Consulta de Pedidos", () => {
   test('Deve consultar um pedido Aprovado', async ({ page }) => {
     // Act — executar a ação sob teste
     await searchOrder(order.approved.id);
+
     // Assert — verificar o resultado
     await expect(page.getByTestId(`order-result-${order.approved.id}`)).toMatchAriaSnapshot(`
     - img
     - paragraph: Pedido
     - paragraph: ${order.approved.id}
-    - img
-    - text: APROVADO
+    - status:
+      - img
+      - text: ${order.approved.status}
     - img "Velô Sprint"
     - paragraph: Modelo
     - paragraph: Velô Sprint
@@ -78,27 +80,34 @@ test.describe("Consulta de Pedidos", () => {
     - paragraph: Loja de Retirada
     - paragraph
     - paragraph: Data do Pedido
-    - paragraph: /\\d+\\/\\d+\\/\\d+/
+    - paragraph: /\\d{2}\\/\\d{2}\\/\\d{4}/
     - heading "Pagamento" [level=4]
     - paragraph: ${order.approved.payment}
-    - paragraph: /R\\$ \\d+\\.\\d+,\\d+/
+    - paragraph: /R\\$\\s\\d{1,3}(\\.\\d{3})*,\\d{2}/
     `);
 
-    // const statusBadge = page.getByRole('status', {name: 'APROVADO'});
-    // await expect(statusBadge).toHaveClass('bg-green-100');
+    const statusBadge = page.getByRole('status').filter({ hasText: order.approved.status });
 
+    await expect(statusBadge).toHaveClass(/bg-green-100/);
+    await expect(statusBadge).toHaveClass(/text-green-700/);
+
+    const statusIcon = statusBadge.locator('svg');
+    await expect(statusIcon).toHaveClass(/lucide lucide-circle-check-big/);
+    
   });
 
   test('Deve consultar um pedido Reprovado', async ({ page }) => {
     // Act — executar a ação sob teste
     await searchOrder(order.rejected.id);
+
     // Assert — verificar o resultado
     await expect(page.getByTestId(`order-result-${order.rejected.id}`)).toMatchAriaSnapshot(`
     - img
     - paragraph: Pedido
     - paragraph: ${order.rejected.id}
-    - img
-    - text: REPROVADO
+    - status:
+      - img
+      - text: ${order.rejected.status}
     - img "Velô Sprint"
     - paragraph: Modelo
     - paragraph: Velô Sprint
@@ -116,11 +125,19 @@ test.describe("Consulta de Pedidos", () => {
     - paragraph: Loja de Retirada
     - paragraph
     - paragraph: Data do Pedido
-    - paragraph: /\\d+\\/\\d+\\/\\d+/
+    - paragraph: /\\d{2}\\/\\d{2}\\/\\d{4}/
     - heading "Pagamento" [level=4]
     - paragraph: ${order.rejected.payment}
-    - paragraph: /R\\$ \\d+\\.\\d+,\\d+/
+    - paragraph: /R\\$\\s\\d{1,3}(\\.\\d{3})*,\\d{2}/
     `);
+
+    const statusBadge = page.getByRole('status').filter({ hasText: order.rejected.status });
+
+    await expect(statusBadge).toHaveClass(/bg-red-100/);
+    await expect(statusBadge).toHaveClass(/text-red-700/);
+
+    const statusIcon = statusBadge.locator('svg');
+    await expect(statusIcon).toHaveClass(/lucide lucide-circle-x/);
   });
 
   test('Deve exibir mensagem quando o pedido não for encontrado', async ({ page }) => {
@@ -143,8 +160,9 @@ test.describe("Consulta de Pedidos", () => {
     - img
     - paragraph: Pedido
     - paragraph: ${order.analysis.id}
-    - img
-    - text: EM_ANALISE
+    - status:
+      - img
+      - text: ${order.analysis.status}
     - img "Velô Sprint"
     - paragraph: Modelo
     - paragraph: Velô Sprint
@@ -162,10 +180,17 @@ test.describe("Consulta de Pedidos", () => {
     - paragraph: Loja de Retirada
     - paragraph
     - paragraph: Data do Pedido
-    - paragraph: /\\d+\\/\\d+\\/\\d+/
+    - paragraph: /\\d{2}\\/\\d{2}\\/\\d{4}/
     - heading "Pagamento" [level=4]
     - paragraph: ${order.analysis.payment}
-    - paragraph: /R\\$ \\d+\\.\\d+,\\d+/
+    - paragraph: /R\\$\\s\\d{1,3}(\\.\\d{3})*,\\d{2}/
     `);
+    const statusBadge = page.getByRole('status').filter({ hasText: order.analysis.status });
+
+    await expect(statusBadge).toHaveClass(/bg-amber-100/);
+    await expect(statusBadge).toHaveClass(/text-amber-700/);
+
+    const statusIcon = statusBadge.locator('svg');
+    await expect(statusIcon).toHaveClass(/lucide lucide-clock/);
   });
 })
