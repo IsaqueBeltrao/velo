@@ -6,7 +6,7 @@ const URL_BASE = 'http://localhost:5173/lookup';
 
 const order = {
   approved: {
-    id: 'VLO-7KQ2P8',
+    id: 'VLO-0F2H3N',
     status: 'APROVADO',
     color: 'Lunar White',
     wheelType: 'aero Wheels',
@@ -16,7 +16,7 @@ const order = {
 
   },
   rejected: {
-    id: 'VLO-13PK6C',
+    id: 'VLO-VZ9Z46',
     status: 'REPROVADO',
     color: 'Midnight Black',
     wheelType: 'sport Wheels',
@@ -25,7 +25,7 @@ const order = {
     payment: 'À Vista',
   },
   analysis: {
-    id: 'VLO-RGANAT',
+    id: 'VLO-RUSMVS',
     status: 'EM_ANALISE',
     color: 'Lunar White',
     wheelType: 'sport Wheels',
@@ -83,6 +83,10 @@ test.describe("Consulta de Pedidos", () => {
     - paragraph: ${order.approved.payment}
     - paragraph: /R\\$ \\d+\\.\\d+,\\d+/
     `);
+
+    // const statusBadge = page.getByRole('status', {name: 'APROVADO'});
+    // await expect(statusBadge).toHaveClass('bg-green-100');
+
   });
 
   test('Deve consultar um pedido Reprovado', async ({ page }) => {
