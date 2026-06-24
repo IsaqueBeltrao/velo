@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test'
-
-import { generateOrderCode } from '../suport/helpers'
+import { generateOrderCode } from '../suport/helpers' 
+import { OrderLookupPage } from '../suport/pages/OrderLookupPage'
 
 /// AAA - Arrange, Act, Assert
 
@@ -31,8 +31,8 @@ test.describe('Consulta de Pedido', () => {
     }
 
     // Act
-    await page.getByRole('textbox', { name: 'Número do Pedido' }).fill(order.number)
-    await page.getByRole('button', { name: 'Buscar Pedido' }).click()
+    const orderLookupPage = new OrderLookupPage(page)
+    await orderLookupPage.searchOrder(order.number)
 
     // Assert
     await expect(page.getByTestId(`order-result-${order.number}`)).toMatchAriaSnapshot(`
@@ -66,13 +66,11 @@ test.describe('Consulta de Pedido', () => {
       `);
 
     const statusBadge = page.getByRole('status').filter({ hasText: order.status })
-
     await expect(statusBadge).toHaveClass(/bg-green-100/)
     await expect(statusBadge).toHaveClass(/text-green-700/)
 
     const statusIcon = statusBadge.locator('svg')
     await expect(statusIcon).toHaveClass(/lucide-circle-check-big/)
-
   })
 
   test('deve consultar um pedido reprovado', async ({ page }) => {
@@ -91,8 +89,8 @@ test.describe('Consulta de Pedido', () => {
     }
 
     // Act
-    await page.getByRole('textbox', { name: 'Número do Pedido' }).fill(order.number)
-    await page.getByRole('button', { name: 'Buscar Pedido' }).click()
+    const orderLookupPage = new OrderLookupPage(page)
+    await orderLookupPage.searchOrder(order.number)
 
     // Assert
     await expect(page.getByTestId(`order-result-${order.number}`)).toMatchAriaSnapshot(`
@@ -126,7 +124,6 @@ test.describe('Consulta de Pedido', () => {
       `);
 
     const statusBadge = page.getByRole('status').filter({ hasText: order.status })
-
     await expect(statusBadge).toHaveClass(/bg-red-100/)
     await expect(statusBadge).toHaveClass(/text-red-700/)
 
@@ -150,8 +147,8 @@ test.describe('Consulta de Pedido', () => {
     }
 
     // Act
-    await page.getByRole('textbox', { name: 'Número do Pedido' }).fill(order.number)
-    await page.getByRole('button', { name: 'Buscar Pedido' }).click()
+    const orderLookupPage = new OrderLookupPage(page)
+    await orderLookupPage.searchOrder(order.number)
 
     // Assert
     await expect(page.getByTestId(`order-result-${order.number}`)).toMatchAriaSnapshot(`
@@ -185,7 +182,6 @@ test.describe('Consulta de Pedido', () => {
       `);
 
     const statusBadge = page.getByRole('status').filter({ hasText: order.status })
-
     await expect(statusBadge).toHaveClass(/bg-amber-100/)
     await expect(statusBadge).toHaveClass(/text-amber-700/)
 
@@ -197,14 +193,15 @@ test.describe('Consulta de Pedido', () => {
 
     const order = generateOrderCode()
 
-    await page.getByRole('textbox', { name: 'Número do Pedido' }).fill(order)
-    await page.getByRole('button', { name: 'Buscar Pedido' }).click()
+    // Act
+    const orderLookupPage = new OrderLookupPage(page)
+    await orderLookupPage.searchOrder(order)
 
+    // Assert
     await expect(page.locator('#root')).toMatchAriaSnapshot(`
       - img
       - heading "Pedido não encontrado" [level=3]
       - paragraph: Verifique o número do pedido e tente novamente
       `)
-
   })
 })

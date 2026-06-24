@@ -1,12 +1,19 @@
+import { Page } from '@playwright/test'
+
+export async function searchOrder(page: Page, orderNumber: string) {
+  await page.getByRole('textbox', { name: 'Número do Pedido' }).fill(orderNumber)
+  await page.getByRole('button', { name: 'Buscar Pedido' }).click()
+}
+
 export function generateOrderCode(): string {
-    const prefixo: string = 'VLO-';
-    const caracteres: string = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    let sufixoAleatorio: string = '';
-  
-    for (let i = 0; i < 6; i++) {
-      const indiceAleatorio:number = Math.floor(Math.random() * caracteres.length);
-      sufixoAleatorio += caracteres.charAt(indiceAleatorio);
-    }
-  
-    return `${prefixo}${sufixoAleatorio}`;
+  const prefix = 'VLO-'
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+  let randomSuffix = ''
+
+  for (let i = 0; i < 6; i++) {
+    const randomIndex = Math.floor(Math.random() * characters.length)
+    randomSuffix += characters.charAt(randomIndex)
   }
+
+  return `${prefix}${randomSuffix}`
+}
