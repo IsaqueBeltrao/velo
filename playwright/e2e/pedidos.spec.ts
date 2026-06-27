@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test'
-import { generateOrderCode } from '../suport/helpers' 
-import { OrderLookupPage } from '../suport/pages/OrderLookupPage'
+import { generateOrderCode } from '../suport/helpers'
+import { OrderLockupPage } from '../suport/pages/OrderLookupPage'
 
 /// AAA - Arrange, Act, Assert
 
@@ -28,11 +28,11 @@ test.describe('Consulta de Pedido', () => {
         email: 'isaqueteste@gmaiil.com'
       },
       payment: 'À Vista'
-    }
+    } as const
 
     // Act
-    const orderLookupPage = new OrderLookupPage(page)
-    await orderLookupPage.searchOrder(order.number)
+    const orderLockupPage = new OrderLockupPage(page)
+    await orderLockupPage.searchOrder(order.number)
 
     // Assert
     await expect(page.getByTestId(`order-result-${order.number}`)).toMatchAriaSnapshot(`
@@ -65,12 +65,7 @@ test.describe('Consulta de Pedido', () => {
       - paragraph: /R\\$ \\d+\\.\\d+,\\d+/
       `);
 
-    const statusBadge = page.getByRole('status').filter({ hasText: order.status })
-    await expect(statusBadge).toHaveClass(/bg-green-100/)
-    await expect(statusBadge).toHaveClass(/text-green-700/)
-
-    const statusIcon = statusBadge.locator('svg')
-    await expect(statusIcon).toHaveClass(/lucide-circle-check-big/)
+    await orderLockupPage.validateStatusBadge(order.status)
   })
 
   test('deve consultar um pedido reprovado', async ({ page }) => {
@@ -86,11 +81,11 @@ test.describe('Consulta de Pedido', () => {
         email: 'spiderman@gmail.com'
       },
       payment: 'À Vista'
-    }
+    } as const
 
     // Act
-    const orderLookupPage = new OrderLookupPage(page)
-    await orderLookupPage.searchOrder(order.number)
+    const orderLockupPage = new OrderLockupPage(page)
+    await orderLockupPage.searchOrder(order.number)
 
     // Assert
     await expect(page.getByTestId(`order-result-${order.number}`)).toMatchAriaSnapshot(`
@@ -123,12 +118,7 @@ test.describe('Consulta de Pedido', () => {
       - paragraph: /R\\$ \\d+\\.\\d+,\\d+/
       `);
 
-    const statusBadge = page.getByRole('status').filter({ hasText: order.status })
-    await expect(statusBadge).toHaveClass(/bg-red-100/)
-    await expect(statusBadge).toHaveClass(/text-red-700/)
-
-    const statusIcon = statusBadge.locator('svg')
-    await expect(statusIcon).toHaveClass(/lucide-circle-x/)
+    await orderLockupPage.validateStatusBadge(order.status)
   })
 
   test('deve consultar um pedido em analise', async ({ page }) => {
@@ -144,11 +134,11 @@ test.describe('Consulta de Pedido', () => {
         email: 'morcegao@gmail.com'
       },
       payment: 'À Vista'
-    }
+    } as const
 
     // Act
-    const orderLookupPage = new OrderLookupPage(page)
-    await orderLookupPage.searchOrder(order.number)
+    const orderLockupPage = new OrderLockupPage(page)
+    await orderLockupPage.searchOrder(order.number)
 
     // Assert
     await expect(page.getByTestId(`order-result-${order.number}`)).toMatchAriaSnapshot(`
@@ -181,12 +171,7 @@ test.describe('Consulta de Pedido', () => {
       - paragraph: /R\\$ \\d+\\.\\d+,\\d+/
       `);
 
-    const statusBadge = page.getByRole('status').filter({ hasText: order.status })
-    await expect(statusBadge).toHaveClass(/bg-amber-100/)
-    await expect(statusBadge).toHaveClass(/text-amber-700/)
-
-    const statusIcon = statusBadge.locator('svg')
-    await expect(statusIcon).toHaveClass(/lucide-clock/)
+    await orderLockupPage.validateStatusBadge(order.status)
   })
 
   test('deve exibir mensagem quando o pedido não é encontrado', async ({ page }) => {
@@ -194,8 +179,8 @@ test.describe('Consulta de Pedido', () => {
     const order = generateOrderCode()
 
     // Act
-    const orderLookupPage = new OrderLookupPage(page)
-    await orderLookupPage.searchOrder(order)
+    const orderLockupPage = new OrderLockupPage(page)
+    await orderLockupPage.searchOrder(order)
 
     // Assert
     await expect(page.locator('#root')).toMatchAriaSnapshot(`
