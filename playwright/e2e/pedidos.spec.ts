@@ -1,18 +1,24 @@
-import { test, expect } from '@playwright/test'
+import { test } from '@playwright/test'
 import { generateOrderCode } from '../suport/helpers'
-import { OrderLockupPage, OrderDetails } from '../suport/pages/OrderLookupPage'
+import { HeaderComponent } from '../suport/components/HeaderComponent'
+import { LandingPage } from '../suport/pages/LandingPage'
+import { OrderLookupPage, OrderDetails } from '../suport/pages/OrderLookupPage'
 
 /// AAA - Arrange, Act, Assert
 
 test.describe('Consulta de Pedido', () => {
 
-  test.beforeEach(async ({ page }) => {
-    // Arrange
-    await page.goto('http://localhost:5173/')
-    await expect(page.getByTestId('hero-section').getByRole('heading')).toContainText('Velô Sprint')
+  let orderLookupPage: OrderLookupPage
 
-    await page.getByRole('link', { name: 'Consultar Pedido' }).click()
-    await expect(page.getByRole('heading')).toContainText('Consultar Pedido')
+  test.beforeEach(async ({ page }) => {
+    const landingPage = new LandingPage(page)
+    await landingPage.open()
+
+    const header = new HeaderComponent(page)
+    await header.orderLockupLink()
+
+    orderLookupPage = new OrderLookupPage(page)
+    await orderLookupPage.assertLoaded()
   })
 
   test('deve consultar um pedido aprovado', async ({ page }) => {
@@ -31,11 +37,10 @@ test.describe('Consulta de Pedido', () => {
     } as const
 
     // Act
-    const orderLockupPage = new OrderLockupPage(page)
-    await orderLockupPage.searchOrder(order.number)
+    await orderLookupPage.searchOrder(order.number)
 
     // Assert
-    await orderLockupPage.validateOrderDetails(order)
+    await orderLookupPage.validateOrderDetails(order)
   })
 
   test('deve consultar um pedido reprovado', async ({ page }) => {
@@ -54,11 +59,10 @@ test.describe('Consulta de Pedido', () => {
     } as const
 
     // Act
-    const orderLockupPage = new OrderLockupPage(page)
-    await orderLockupPage.searchOrder(order.number)
+    await orderLookupPage.searchOrder(order.number)
 
     // Assert
-    await orderLockupPage.validateOrderDetails(order)
+    await orderLookupPage.validateOrderDetails(order)
   })
 
   test('deve consultar um pedido em analise', async ({ page }) => {
@@ -77,11 +81,10 @@ test.describe('Consulta de Pedido', () => {
     } as const
 
     // Act
-    const orderLockupPage = new OrderLockupPage(page)
-    await orderLockupPage.searchOrder(order.number)
+    await orderLookupPage.searchOrder(order.number)
 
     // Assert
-    await orderLockupPage.validateOrderDetails(order)
+    await orderLookupPage.validateOrderDetails(order)
   })
 
   test('deve exibir mensagem quando o pedido não é encontrado', async ({ page }) => {
@@ -89,25 +92,19 @@ test.describe('Consulta de Pedido', () => {
     const order = generateOrderCode()
 
     // Act
-    const orderLockupPage = new OrderLockupPage(page)
-    await orderLockupPage.searchOrder(order)
+    await orderLookupPage.searchOrder(order)
 
     // Assert
-    await expect(page.locator('#root')).toMatchAriaSnapshot(`
-      - img
-      - heading "Pedido não encontrado" [level=3]
-      - paragraph: Verifique o número do pedido e tente novamente
-      `)
+    await orderLookupPage.validateOrderNotFound()
   })
 
   test('deve exibir mensagem quando o código do pedido esta fora do padrão', async ({ page }) => {
     const order = "abc123-XPTO"
 
     // Act
-    const orderLockupPage = new OrderLockupPage(page)
-    await orderLockupPage.searchOrder(order)
+    await orderLookupPage.searchOrder(order)
 
     // Assert
-    await orderLockupPage.validadeOrderNotFound()
+    await orderLookupPage.validateOrderNotFound()
   })
 })

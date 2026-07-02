@@ -15,8 +15,13 @@ export type OrderDetails = {
   payment: string
 }
 
-export class OrderLockupPage {
+export class OrderLookupPage {
   constructor(private page: Page) { }
+
+  async assertLoaded() {
+    await expect(this.page.getByRole('heading')).toContainText('Consultar Pedido')
+  }
+
   async searchOrder(code: string) {
     await this.page.getByRole('textbox', { name: 'Número do Pedido' }).fill(code)
     await this.page.getByRole('button', { name: 'Buscar Pedido' }).click()
@@ -86,7 +91,7 @@ export class OrderLockupPage {
     await this.validateStatusBadge(order.status)
   }
 
-  async validadeOrderNotFound() {
+  async validateOrderNotFound() {
     await expect(this.page.locator('#root')).toMatchAriaSnapshot(`
       - img
       - heading "Pedido não encontrado" [level=3]
